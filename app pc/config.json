@@ -1,0 +1,134 @@
+{
+  "school_name": "Escola Profissional Mariana Seixas",
+  "application_title": "EPMS Future Mirror",
+  "slogan": "Experimenta o teu futuro em 30 segundos",
+  "website": "www.epms.pt",
+  "qr_link": "https://www.epms.pt/",
+  "logo_path": "assets/logo_epms.png",
+  "background_path": "assets/background.png",
+  "output_folder": "outputs",
+  "camera_index": 0,
+  "camera_scan_limit": 8,
+  "camera_resolution": [1280, 720],
+  "countdown_seconds": 3,
+  "fullscreen_on_launch": true,
+  "allow_printing": true,
+  "printing": {
+    "preferred_printer_keyword": "SELPHY",
+    "paper_width_mm": 148,
+    "paper_height_mm": 100,
+    "print_dpi": 300,
+    "show_vertical_option": true
+  },
+  "future_message_template": "O teu futuro começa na EPMS.",
+  "home_messages": [
+    "Experimenta o teu futuro em 30 segundos",
+    "O teu futuro começa aqui",
+    "Fazemos a diferença",
+    "Hoje aluno. Amanhã profissional."
+  ],
+  "primary_colors": {
+    "navy": "#26628F",
+    "deep_navy": "#0B1F3B",
+    "orange": "#F47C20",
+    "amber": "#FFC247",
+    "surface": "#112540",
+    "surface_alt": "#18345A",
+    "text": "#F8FAFD",
+    "muted_text": "#C8D5E6",
+    "success": "#98E9B4"
+  },
+  "email_delivery": {
+    "enabled": false,
+    "sender_name": "EPMS Future Mirror",
+    "sender_email": "",
+    "smtp_host": "",
+    "smtp_port": 465,
+    "use_ssl": true,
+    "use_starttls": false,
+    "username": "",
+    "password": "",
+    "subject_template": "A tua fotografia EPMS Future Mirror",
+    "body_template": "Olá {recipient_name},\n\nSegue em anexo a tua fotografia EPMS Future Mirror no perfil {profile_name}.\n\nAté breve,\n{school_name}\n{website}"
+  },
+  "profiles": [
+    {
+      "name": "Técnico/a de Ação Educativa",
+      "headline": "Acompanha o crescimento das crianças com energia, cuidado e criatividade.",
+      "future_line": "Aprende a apoiar, educar e inspirar com a EPMS.",
+      "accent": "#FFC247"
+    },
+    {
+      "name": "Técnico/a de Auxiliar de Saúde",
+      "headline": "Cuida de pessoas com empatia, técnica e espírito de missão.",
+      "future_line": "Prepara-te para fazer a diferença na área da saúde.",
+      "accent": "#7BE1C8"
+    },
+    {
+      "name": "Cabeleireiro/a",
+      "headline": "Transforma estilo, imagem e confiança em experiências memoráveis.",
+      "future_line": "Dá forma ao teu talento criativo com a EPMS.",
+      "accent": "#FFB56B"
+    },
+    {
+      "name": "Técnico/a de Cozinha e Restauração",
+      "headline": "Explora sabor, organização e serviço em ambientes profissionais.",
+      "future_line": "Cria experiências à mesa com técnica e paixão.",
+      "accent": "#F47C20"
+    },
+    {
+      "name": "Técnico/a de Comunicação - Marketing, Relações Públicas e Publicidade",
+      "headline": "Cria campanhas, marcas e mensagens com impacto real.",
+      "future_line": "Comunica com estratégia, criatividade e visão de futuro.",
+      "accent": "#79A9FF"
+    },
+    {
+      "name": "Técnico/a de Desporto",
+      "headline": "Promove bem-estar, movimento e desempenho com atitude positiva.",
+      "future_line": "Leva a tua energia mais longe com a EPMS.",
+      "accent": "#9BE7B1"
+    },
+    {
+      "name": "Técnico/a de Desenvolvimento de Software",
+      "headline": "Constrói aplicações, soluções digitais e novas experiências tecnológicas.",
+      "future_line": "Programa o teu próximo passo com a EPMS.",
+      "accent": "#4CE3FF"
+    },
+    {
+      "name": "Técnico/a de Eletrónica e Automação",
+      "headline": "Liga inovação, controlo e tecnologia ao mundo real.",
+      "future_line": "Domina sistemas inteligentes e automação moderna.",
+      "accent": "#F6A54A"
+    },
+    {
+      "name": "Esteticista",
+      "headline": "Valoriza o bem-estar, a imagem e o cuidado pessoal com criatividade.",
+      "future_line": "Transforma beleza em profissão com a EPMS.",
+      "accent": "#FF95C7"
+    },
+    {
+      "name": "Técnico/a de Informática de Gestão",
+      "headline": "Une tecnologia, organização e dados para apoiar decisões.",
+      "future_line": "Liga gestão e digital ao teu futuro profissional.",
+      "accent": "#70B7FF"
+    },
+    {
+      "name": "Técnico/a de Multimédia",
+      "headline": "Conta histórias com design, imagem, vídeo e criatividade digital.",
+      "future_line": "Cria conteúdos que marcam com a EPMS.",
+      "accent": "#B9A1FF"
+    },
+    {
+      "name": "Técnico/a de Produção de Conteúdos Interativos",
+      "headline": "Desenha experiências digitais envolventes para novas audiências.",
+      "future_line": "Dá vida a ideias interativas com a EPMS.",
+      "accent": "#FF9D73"
+    },
+    {
+      "name": "Técnico/a de Sistemas de Computação e Redes",
+      "headline": "Garante infraestrutura, segurança e ligações que mantêm tudo a funcionar.",
+      "future_line": "Constrói redes, sistemas e confiança tecnológica.",
+      "accent": "#8BD3FF"
+    }
+  ]
+}

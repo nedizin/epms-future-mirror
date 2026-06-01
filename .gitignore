@@ -1,0 +1,22 @@
+# Android build outputs
+APP android/.gradle/
+APP android/build/
+APP android/app/build/
+APP android/local.properties
+APP android/**/*.iml
+APP android/.idea/
+
+# PC app — compiled runtime (large binaries, not source)
+app pc/_internal/
+app pc/EPMS Future Mirror.exe
+app pc/outputs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

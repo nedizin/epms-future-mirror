@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    {
+      "id": "user-flow-group",
+      "type": "group",
+      "x": -1440,
+      "y": -560,
+      "width": 1900,
+      "height": 400,
+      "label": "User Journey"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# EPMS Future Mirror\n\n**Escola Profissional Mariana Seixas** · [www.epms.pt](https://www.epms.pt)\n\n> *\"Experimenta o teu futuro em 30 segundos\"*\n\nAn experiential **photo booth kiosk** for school open days and events. Visitors pick a professional course profile, take a selfie with a thematic overlay, and walk away with a branded composite image — printed, saved, or emailed.\n\nAvailable as a **PC app** (Python/CustomTkinter) and an **Android app** (Kotlin/Jetpack Compose).",
+      "x": -500,
+      "y": -920,
+      "width": 720,
+      "height": 300,
+      "color": "6"
+    },
+    {
+      "id": "home",
+      "type": "text",
+      "text": "## 1. Home Screen\n\n- Fullscreen kiosk mode\n- Rotating motivational messages\n- EPMS logo & branding\n- Tap anywhere to start",
+      "x": -1400,
+      "y": -510,
+      "width": 260,
+      "height": 220
+    },
+    {
+      "id": "profile-sel",
+      "type": "text",
+      "text": "## 2. Profile Selection\n\n- Grid of 13 course cards\n- Each has emoji, name & accent color\n- Visitor picks their dream career",
+      "x": -1100,
+      "y": -510,
+      "width": 260,
+      "height": 220
+    },
+    {
+      "id": "camera",
+      "type": "text",
+      "text": "## 3. Camera\n\n- Live camera preview\n- 3-second countdown\n- Photo captured\n- Thematic overlay composed",
+      "x": -800,
+      "y": -510,
+      "width": 260,
+      "height": 220
+    },
+    {
+      "id": "result",
+      "type": "text",
+      "text": "## 4. Result Screen\n\n- Composite photo displayed full-screen\n- Top bar: EPMS logo + app title\n- Bottom: profile name, headline, future line\n- QR code linking to epms.pt\n- Action buttons",
+      "x": -500,
+      "y": -510,
+      "width": 260,
+      "height": 220
+    },
+    {
+      "id": "lead",
+      "type": "text",
+      "text": "## 5. Lead Capture\n\n- Name *(required)*\n- School\n- Year level\n- Phone number\n- Email address\n- Interest area\n\nTriggered before Save / Print / Email",
+      "x": -200,
+      "y": -510,
+      "width": 260,
+      "height": 300,
+      "color": "3"
+    },
+    {
+      "id": "outputs",
+      "type": "text",
+      "text": "## 6. Outputs\n\n**Save** — Gallery: Landscape, Square & Story formats\n\n**Print** — Canon SELPHY (Portrait or Landscape, 148×100mm, 300 DPI)\n\n**Email** — Composite sent to visitor's inbox\n\n**Retake** — Back to camera\n\n**New Experience** — Restart from Home",
+      "x": 100,
+      "y": -510,
+      "width": 320,
+      "height": 300,
+      "color": "4"
+    },
+    {
+      "id": "pc-app",
+      "type": "text",
+      "text": "## PC App\n\n**Language:** Python\n**UI:** CustomTkinter\n**Camera:** OpenCV (cv2)\n**Distribution:** PyInstaller `.exe`\n\n- `config.json` drives all settings\n- Outputs saved to `outputs/` folder\n- Leads saved to `data/leads_epms.csv`\n- SELPHY print support built-in\n- Optional SMTP email delivery",
+      "x": -1400,
+      "y": 0,
+      "width": 380,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "android-app",
+      "type": "text",
+      "text": "## Android App\n\n**Language:** Kotlin\n**UI:** Jetpack Compose\n**Navigation:** NavHost\n\nRoutes:\n`home` → `profiles` → `camera/{index}` → `result/{index}`\n\n- QR bitmap generated at runtime\n- Leads CSV saved to external storage\n- System bars hidden (full kiosk)\n- Screen-on flag set (`FLAG_KEEP_SCREEN_ON`)",
+      "x": -960,
+      "y": 0,
+      "width": 380,
+      "height": 280,
+      "color": "2"
+    },
+    {
+      "id": "config",
+      "type": "text",
+      "text": "## config.json (PC)\n\n```\nschool_name, slogan, website\ncamera_index, camera_resolution [1280×720]\ncountdown_seconds: 3\nfullscreen_on_launch: true\nallow_printing: true\n  preferred_printer_keyword: SELPHY\n  paper: 148×100mm @ 300 DPI\nemail_delivery (SMTP settings)\nprimary_colors (brand palette)\nprofiles[] — 13 course entries\nhome_messages[] — rotating slogans\n```",
+      "x": -520,
+      "y": 0,
+      "width": 360,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "composite",
+      "type": "text",
+      "text": "## Composite Image\n\nLayers merged on capture:\n\n1. Raw photo (full bleed)\n2. Top glass bar → EPMS logo + title\n3. Bottom panel → profile accent stripe\n4. Profile name, headline, future line\n5. QR code (bottom-right corner)\n6. Future message text\n\nExported as **Landscape / Square / Story**",
+      "x": -100,
+      "y": 0,
+      "width": 320,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "data-flow",
+      "type": "text",
+      "text": "## Lead Data (CSV)\n\n**File:** `leads_epms.csv`\n\n| Column | Description |\n|---|---|\n| `timestamp` | Date & time of capture |\n| `profile` | Course chosen |\n| `photo_style` | landscape / square / story |\n| `name` | Visitor name |\n| `school` | School of origin |\n| `year_level` | School year |\n| `contact` | Phone number |\n| `delivery_email` | Email |\n| `interest_area` | Chosen interest |\n| `saved_*` | Boolean flags per format |\n\nOne row per interaction — ready for marketing follow-up.",
+      "x": 280,
+      "y": 0,
+      "width": 400,
+      "height": 360,
+      "color": "3"
+    },
+    {
+      "id": "profiles-list",
+      "type": "text",
+      "text": "## 13 Course Profiles\n\nEach has: **name**, **headline**, **futureLine**, **accent color**, **emoji**\n\n| | Course |\n|---|---|\n| 🧸 | Técnico/a de Ação Educativa |\n| 🩺 | Técnico/a de Auxiliar de Saúde |\n| ✂️ | Cabeleireiro/a |\n| 👨‍🍳 | Técnico/a de Cozinha e Restauração |\n| 📣 | Técnico/a de Comunicação (Marketing & PR) |\n| ⚽ | Técnico/a de Desporto |\n| 💻 | Técnico/a de Desenvolvimento de Software |\n| 🤖 | Técnico/a de Eletrónica e Automação |\n| 💅 | Esteticista |\n| 📊 | Técnico/a de Informática de Gestão |\n| 🎬 | Técnico/a de Multimédia |\n| 🎮 | Técnico/a de Produção de Conteúdos Interativos |\n| 🌐 | Técnico/a de Sistemas de Computação e Redes |",
+      "x": -1400,
+      "y": 360,
+      "width": 720,
+      "height": 520,
+      "color": "6"
+    },
+    {
+      "id": "brand-colors",
+      "type": "text",
+      "text": "## Brand Colors\n\n| Name | Hex |\n|---|---|\n| `navy` | `#26628F` |\n| `deep_navy` | `#0B1F3B` |\n| `orange` | `#F47C20` |\n| `amber` | `#FFC247` |\n| `surface` | `#112540` |\n| `surface_alt` | `#18345A` |\n| `text` | `#F8FAFD` |\n| `muted_text` | `#C8D5E6` |\n| `success` | `#98E9B4` |",
+      "x": -600,
+      "y": 360,
+      "width": 320,
+      "height": 340,
+      "color": "5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-home-profilesel",
+      "fromNode": "home",
+      "fromSide": "right",
+      "toNode": "profile-sel",
+      "toSide": "left"
+    },
+    {
+      "id": "e-profilesel-camera",
+      "fromNode": "profile-sel",
+      "fromSide": "right",
+      "toNode": "camera",
+      "toSide": "left"
+    },
+    {
+      "id": "e-camera-result",
+      "fromNode": "camera",
+      "fromSide": "right",
+      "toNode": "result",
+      "toSide": "left"
+    },
+    {
+      "id": "e-result-lead",
+      "fromNode": "result",
+      "fromSide": "right",
+      "toNode": "lead",
+      "toSide": "left",
+      "label": "Save / Print / Email"
+    },
+    {
+      "id": "e-lead-outputs",
+      "fromNode": "lead",
+      "fromSide": "right",
+      "toNode": "outputs",
+      "toSide": "left",
+      "label": "on confirm"
+    },
+    {
+      "id": "e-result-composite",
+      "fromNode": "result",
+      "fromSide": "bottom",
+      "toNode": "composite",
+      "toSide": "top",
+      "label": "creates",
+      "color": "4"
+    },
+    {
+      "id": "e-lead-dataflow",
+      "fromNode": "lead",
+      "fromSide": "bottom",
+      "toNode": "data-flow",
+      "toSide": "top",
+      "label": "writes row",
+      "color": "3"
+    },
+    {
+      "id": "e-config-pcapp",
+      "fromNode": "config",
+      "fromSide": "left",
+      "toNode": "pc-app",
+      "toSide": "right",
+      "label": "configures",
+      "color": "2"
+    },
+    {
+      "id": "e-profileslist-profilesel",
+      "fromNode": "profiles-list",
+      "fromSide": "top",
+      "toNode": "profile-sel",
+      "toSide": "bottom",
+      "label": "populates",
+      "color": "6"
+    },
+    {
+      "id": "e-composite-outputs",
+      "fromNode": "composite",
+      "fromSide": "right",
+      "toNode": "outputs",
+      "toSide": "bottom",
+      "label": "used by",
+      "color": "4"
+    }
+  ]
+}
