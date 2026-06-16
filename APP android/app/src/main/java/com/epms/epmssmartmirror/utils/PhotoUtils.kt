@@ -27,6 +27,22 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import java.io.FileOutputStream
 
+// ---------------------------------------------------------------------------
+// Canon SELPHY postcard print geometry.
+// After the perforated tabs are separated, the usable photo is 100 x 148 mm.
+// We always print landscape, so the design canvas is 148 (wide) x 100 (tall) mm.
+// ---------------------------------------------------------------------------
+private const val PRINT_DPI = 300
+private const val PRINT_LONG_MM = 148f
+private const val PRINT_SHORT_MM = 100f
+// The SELPHY prints borderless by bleeding a few mm past the cut line; keep the
+// logo / text / QR inside this safe margin so they survive the tear-off.
+private const val PRINT_BLEED_MM = 3f
+
+val PRINT_WIDTH_PX = Math.round(PRINT_LONG_MM / 25.4f * PRINT_DPI)    // 1748
+val PRINT_HEIGHT_PX = Math.round(PRINT_SHORT_MM / 25.4f * PRINT_DPI)  // 1181
+val PRINT_SAFE_INSET_FRACTION = PRINT_BLEED_MM / PRINT_SHORT_MM       // 0.03
+
 fun generateQrBitmap(content: String, size: Int): Bitmap? {
     return try {
         val hints = hashMapOf<EncodeHintType, Any>(EncodeHintType.MARGIN to 1)
@@ -43,11 +59,52 @@ fun generateQrBitmap(content: String, size: Int): Bitmap? {
     }
 }
 
-fun createCompositeBitmap(context: Context, photo: Bitmap, profile: Profile): Bitmap {
-    val width = photo.width
-    val height = photo.height
-    val output = photo.copy(Bitmap.Config.ARGB_8888, true)
+/** Draws [photo] center-cropped to completely fill the [destW] x [destH] canvas. */
+private fun drawPhotoCropped(canvas: Canvas, photo: Bitmap, destW: Int, destH: Int) {
+    val srcRatio = photo.width.toFloat() / photo.height
+    val dstRatio = destW.toFloat() / destH
+    val src = if (srcRatio > dstRatio) {
+        // Photo is wider than the canvas -> crop the sides.
+        val cropW = (photo.height * dstRatio).toInt()
+        val x = (photo.width - cropW) / 2
+        Rect(x, 0, x + cropW, photo.height)
+    } else {
+        // Photo is taller than the canvas -> crop top/bottom.
+        val cropH = (photo.width / dstRatio).toInt()
+        val y = (photo.height - cropH) / 2
+        Rect(0, y, photo.width, y + cropH)
+    }
+    canvas.drawBitmap(photo, src, Rect(0, 0, destW, destH), Paint().apply { isFilterBitmap = true })
+}
+
+/**
+ * Builds the branded composite.
+ *
+ * By default the output keeps the source photo's dimensions (used for gallery
+ * saves). For printing, pass [outputWidth]/[outputHeight] set to the SELPHY
+ * postcard size so the design matches the paper's aspect ratio exactly — the
+ * photo is then center-cropped to fill, and [safeInsetFraction] pushes the
+ * logo / text / QR inward so the borderless bleed doesn't clip them.
+ */
+fun createCompositeBitmap(
+    context: Context,
+    photo: Bitmap,
+    profile: Profile,
+    outputWidth: Int = photo.width,
+    outputHeight: Int = photo.height,
+    safeInsetFraction: Float = 0f
+): Bitmap {
+    val width = outputWidth
+    val height = outputHeight
+    val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
+
+    // Draw the photo center-cropped (fill) so it covers the canvas without
+    // distortion regardless of the requested aspect ratio.
+    drawPhotoCropped(canvas, photo, width, height)
+
+    // Extra inset (px) to keep edge-anchored elements out of the SELPHY bleed.
+    val inset = minOf(width, height) * safeInsetFraction
 
     val accentArgb = profile.accent.toArgb()
 
@@ -80,8 +137,8 @@ fun createCompositeBitmap(context: Context, photo: Bitmap, profile: Profile): Bi
         val logo = BitmapFactory.decodeResource(context.resources, R.drawable.logo_epms)
         val lh = (height * 0.058f).toInt()
         val lw = (logo.width.toFloat() / logo.height * lh).toInt()
-        val lx = (height * 0.022f).toInt()
-        val ly = (height * 0.022f).toInt()
+        val lx = (height * 0.022f + inset).toInt()
+        val ly = (height * 0.022f + inset).toInt()
         canvas.drawBitmap(logo, null, Rect(lx, ly, lx + lw, ly + lh), null)
 
         val siteP = Paint().apply {
@@ -129,7 +186,7 @@ fun createCompositeBitmap(context: Context, photo: Bitmap, profile: Profile): Bi
 
     // ---------- Emoji badge ----------
     val emojiR = height * 0.062f
-    val emojiCx = (height * 0.030f) + emojiR
+    val emojiCx = (height * 0.030f + inset) + emojiR
     val emojiCy = overlayTop + (overlayH * 0.30f)
 
     // Soft halo
@@ -182,7 +239,7 @@ fun createCompositeBitmap(context: Context, photo: Bitmap, profile: Profile): Bi
     // Calculate available text width (leave space for the QR card on the right)
     val qrSizePx = (overlayH * 0.62f).toInt()
     val qrPad = (height * 0.012f)
-    val qrRight = width - (height * 0.055f)
+    val qrRight = width - (height * 0.055f) - inset
     val qrLeft = qrRight - qrSizePx - qrPad * 2
     val textRight = qrLeft - 24f
     val textWidth = (textRight - textLeft).coerceAtLeast(80f)
@@ -272,35 +329,16 @@ fun createCompositeBitmap(context: Context, photo: Bitmap, profile: Profile): Bi
     return output
 }
 
-fun cropToSquare(bitmap: Bitmap): Bitmap {
-    val side = minOf(bitmap.width, bitmap.height)
-    val x = (bitmap.width - side) / 2
-    val y = (bitmap.height - side) / 2
-    return Bitmap.createBitmap(bitmap, x, y, side, side)
-}
-
-fun cropToStory(bitmap: Bitmap): Bitmap {
-    // 9:16 aspect ratio (portrait story format)
-    val targetWidth: Int
-    val targetHeight: Int
-    if (bitmap.height.toFloat() / bitmap.width >= 16f / 9f) {
-        targetWidth = bitmap.width
-        targetHeight = bitmap.width * 16 / 9
-    } else {
-        targetHeight = bitmap.height
-        targetWidth = bitmap.height * 9 / 16
-    }
-    val x = (bitmap.width - targetWidth) / 2
-    val y = (bitmap.height - targetHeight) / 2
-    return Bitmap.createBitmap(
-        bitmap,
-        x.coerceAtLeast(0), y.coerceAtLeast(0),
-        targetWidth.coerceAtMost(bitmap.width), targetHeight.coerceAtMost(bitmap.height)
-    )
-}
-
 fun saveCompositeToCache(context: Context, photo: Bitmap, profile: Profile): File {
-    return saveBitmapToCache(context, createCompositeBitmap(context, photo, profile))
+    return saveBitmapToCache(
+        context,
+        createCompositeBitmap(
+            context, photo, profile,
+            outputWidth = PRINT_WIDTH_PX,
+            outputHeight = PRINT_HEIGHT_PX,
+            safeInsetFraction = PRINT_SAFE_INSET_FRACTION
+        )
+    )
 }
 
 fun saveBitmapToCache(context: Context, bitmap: Bitmap, filename: String = "epms_share.jpg"): File {

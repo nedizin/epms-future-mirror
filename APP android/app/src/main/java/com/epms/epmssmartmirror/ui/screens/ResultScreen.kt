@@ -44,9 +44,10 @@ import com.epms.epmssmartmirror.ui.theme.MutedText
 import com.epms.epmssmartmirror.ui.theme.Navy
 import com.epms.epmssmartmirror.ui.theme.SurfaceAlt
 import com.epms.epmssmartmirror.ui.theme.TextColor
+import com.epms.epmssmartmirror.utils.PRINT_HEIGHT_PX
+import com.epms.epmssmartmirror.utils.PRINT_SAFE_INSET_FRACTION
+import com.epms.epmssmartmirror.utils.PRINT_WIDTH_PX
 import com.epms.epmssmartmirror.utils.createCompositeBitmap
-import com.epms.epmssmartmirror.utils.cropToSquare
-import com.epms.epmssmartmirror.utils.cropToStory
 import com.epms.epmssmartmirror.utils.generateQrBitmap
 import com.epms.epmssmartmirror.utils.printPhoto
 import com.epms.epmssmartmirror.utils.saveToGallery
@@ -214,11 +215,14 @@ fun ResultScreen(
                     containerColor = Navy,
                     modifier = Modifier.weight(1f),
                     onClick = {
-                        val composite = createCompositeBitmap(context, photoBitmap, profile)
-                        val savedL = saveToGallery(context, composite, "_landscape") != null
-                        saveToGallery(context, cropToSquare(composite), "_square")
-                        saveToGallery(context, cropToStory(composite), "_story")
-                        val msg = if (savedL) "Guardado na galeria!" else "Erro ao guardar."
+                        val composite = createCompositeBitmap(
+                            context, photoBitmap, profile,
+                            outputWidth = PRINT_WIDTH_PX,
+                            outputHeight = PRINT_HEIGHT_PX,
+                            safeInsetFraction = PRINT_SAFE_INSET_FRACTION
+                        )
+                        val saved = saveToGallery(context, composite) != null
+                        val msg = if (saved) "Guardado na galeria!" else "Erro ao guardar."
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                     }
                 )
@@ -227,7 +231,13 @@ fun ResultScreen(
                     containerColor = Color(0xFF1A4A2E),
                     modifier = Modifier.weight(1f),
                     onClick = {
-                        printPhoto(context, createCompositeBitmap(context, photoBitmap, profile), portrait = false)
+                        val printable = createCompositeBitmap(
+                            context, photoBitmap, profile,
+                            outputWidth = PRINT_WIDTH_PX,
+                            outputHeight = PRINT_HEIGHT_PX,
+                            safeInsetFraction = PRINT_SAFE_INSET_FRACTION
+                        )
+                        printPhoto(context, printable, portrait = false)
                     }
                 )
                 ActionButton(
